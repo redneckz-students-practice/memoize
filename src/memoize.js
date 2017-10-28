@@ -1,33 +1,25 @@
-export function memoize(action) {
-    if (typeof action !== 'function') {
+export function memoize(functionMemoize) {
+    if (typeof functionMemoize !== 'function') {
         return null;
     }
     const cache = {};
     return function my(...args) {
-        let checksum = 0;
+        let index = 0;
         if (args.length > 0) {
-            checksum = check(args);
+            index = check(args);
         }
 
-        if (typeof cache[checksum] === 'undefined') {
-            cache[checksum] = action.apply(this, args);
+        if (!(index in cache)) {
+            cache[index] = this::functionMemoize(...args);
         }
-        return cache[checksum];
+        return cache[index];
     };
 
     function check(...args) {
-        const params = JSON.stringify(args);
-        let checksum = 0;
-        let i;
-        let len;
+        const params = new Array(JSON.stringify(args));
         if (params.length === 0) {
-            return checksum;
+            return 0;
         }
-
-        for (i = 0, len = params.length; i < len; i += 1) {
-            checksum += ((((checksum || params.length) - checksum) + ((params.charCodeAt(i) * i) + i)) || 0);
-        }
-
-        return checksum;
+        return params.reduce((sum, cur, i) => sum + (((cur || params.length - cur) + ((cur.charCodeAt(i) * i) + i))));
     }
 }
