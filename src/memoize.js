@@ -16,7 +16,7 @@ export function memoize(functionMemoize) {
     };
 
     function check(...args) {
-        const params = new Array(JSON.stringify(args));
+        const params = new Array(stringify(args));
         if (params.length === 0) {
             return 0;
         }
@@ -37,5 +37,49 @@ export function memoize(functionMemoize) {
             });
         }
         return functionMemoize.calculateHash;
+    }
+
+    function type(obj) {
+        return Object.prototype.toString.call(obj).match(/.* (.*)\]/)[1];
+    }
+
+    function stringify(obj) {
+        if (type(obj) === 'Function') {
+            return null;
+        }
+        if (type(obj) === 'Undefined') {
+            return null;
+        }
+        if (type(obj) === 'Null') {
+            return 'null';
+        }
+        if (type(obj) === 'Number') {
+            return `Number:${obj}`;
+        }
+        if (type(obj) === 'String') {
+            return `"String:${obj}"`;
+        }
+        if (type(obj) === 'Array') {
+            return `[${
+                obj.map(o => stringify(o)).join(',')
+            }]`;
+        }
+        if (type(obj) === 'Boolean') {
+            return `Boolean:${obj.toString()}`;
+        }
+        if (type(obj) === 'RegExp') {
+            return `RegExp${obj.toString()}`;
+        }
+        if (type(obj) === 'Object') {
+            const result = [];
+            Object.keys(obj).forEach((key) => {
+                const val = stringify(obj[key]);
+                if (val !== null) {
+                    result.push(`"${key}": ${val}`);
+                }
+            });
+            return `{${result.join(',')}}`;
+        }
+        return null;
     }
 }
