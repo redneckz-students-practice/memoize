@@ -20,6 +20,22 @@ export function memoize(functionMemoize) {
         if (params.length === 0) {
             return 0;
         }
-        return params.reduce((sum, cur, i) => sum + (((cur || params.length - cur) + ((cur.charCodeAt(i) * i) + i))));
+        if (functionMemoize.calculateHash === undefined || functionMemoize.params !== params) {
+            const hashValue = params.reduce((sum, cur, i) =>
+                sum + (((cur || params.length - cur) + ((cur.charCodeAt(i) * i) + i))));
+            Object.defineProperties(functionMemoize, {
+                params: {
+                    value: params,
+                    writable: true,
+                    configurable: true
+                },
+                calculateHash: {
+                    value: hashValue,
+                    writable: false,
+                    configurable: true
+                }
+            });
+        }
+        return functionMemoize.calculateHash;
     }
 }
