@@ -21,9 +21,6 @@ export function memoize(func) {
 }
 
 function getHash(args) {
-    let hash = '';
-    for (let i = 0; i < args.length; i += 1) {
-        hash += JSON.stringify(args[i]);
-    }
-    return hash;
+    return args.reduce((previousValue, currentValue) =>
+        previousValue + JSON.stringify(currentValue));
 }
