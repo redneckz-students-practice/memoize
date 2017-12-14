@@ -3,24 +3,23 @@ export function memoize(func) {
         return null;
     }
 
-    const cache = [];
+    const cache = new Map();
 
     return function memoizedFunc(...rest) {
-        let index = 0;
+        const index = getHash(rest);
         let result;
-        if (rest.length !== 0) {
-            index = getHash(rest);
-        }
-
-        if (!(index in cache)) {
+        if (!(cache.has(index))) {
             result = func.apply(this, rest);
-            cache[index] = result;
+            cache.set(index, result);
         }
-        return cache[index];
+        return cache.get(index);
     };
 }
 
 function getHash(rest) {
+    if (rest.length === 0) {
+        return 0;
+    }
     function appendCurrent(previousValue, currentValue) {
         return previousValue + JSON.stringify(currentValue);
     }
