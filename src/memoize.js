@@ -4,20 +4,15 @@ export function memoize(func) {
         return null;
     }
 
-    const cache = {};
+    const cache = new Map();
 
     return function memoizedFunc(...rest) {
-        let index = 0;
-        let returnResult;
-        if (rest.length > 0) {
-            index = getHash(rest);
-        }
+        const index = getHash(rest);
 
-        if (!(index in cache)) {
-            returnResult = func.apply(this, rest);
-            cache[index] = returnResult;
+        if (!cache.has(index)) {
+            cache.set(index, func.apply(this, rest));
         }
-        return cache[index];
+        return cache.get(index);
     };
 }
 
