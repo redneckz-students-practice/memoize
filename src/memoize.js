@@ -8,9 +8,10 @@ export function memoize(func) {
     return function memoizedFunc(...rest) {
         const index = getHash(rest);
 
-        if (!cache.has(index)) {
-            cache.set(index, func.apply(this, rest));
+        if (cache.has(index)) {
+            return cache.get(index);
         }
+        cache.set(index, func.apply(this, rest));
         return cache.get(index);
     };
 }
