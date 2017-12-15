@@ -36,7 +36,7 @@ function getHash(obj) {
         case 'Object':
             hash += 'Object{';
             Object.keys(obj).forEach((prop) => {
-                hash += getHash(prop);
+                hash += getHash(obj[prop]);
             });
             hash += '}';
             break;
