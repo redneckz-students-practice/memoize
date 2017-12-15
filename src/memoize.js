@@ -6,13 +6,13 @@ export function memoize(func) {
     const cache = new Map();
 
     return function memoizedFunc(...rest) {
-        const index = getHash(rest);
+        const key = getHash(rest);
 
-        if (cache.has(index)) {
-            return cache.get(index);
+        if (cache.has(key)) {
+            return cache.get(key);
         }
-        cache.set(index, func.apply(this, rest));
-        return cache.get(index);
+        cache.set(key, func.apply(this, rest));
+        return cache.get(key);
     };
 }
 
