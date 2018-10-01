@@ -1,5 +1,5 @@
 export function memoize(func) {
-    if (!(typeof func === 'function')) return null;
+    if (!(typeof func === 'function')) return undefined;
     const storage = new Map();
     function generateKey(args) {
         const key = args.map(elem => `${(typeof elem)}:${elem}`).join('|');

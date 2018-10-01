@@ -10,7 +10,7 @@ describe('memoize', () => {
 
     it('should return undefined if no function provided', () => {
         [undefined, null, 123, {}].forEach((arg) => {
-            expect(memoize(arg)).to.be.an('null');
+            expect(memoize(arg)).to.be.an('undefined');
         });
     });
 
