@@ -1,3 +1,3 @@
-export function memoize() {
+export function memoize(func) {
     // TODO
 }

@@ -132,5 +132,4 @@ describe('memoize', () => {
             expect(memoizedAbs(3, 4)).to.equal(5); // #2
             sinon.assert.notCalled(absSpy);
         });
-    });
 });
