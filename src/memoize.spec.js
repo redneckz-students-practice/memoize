@@ -162,5 +162,23 @@ describe('memoize', () => {
                 sinon.assert.calledTwice(identitySpy);
             });
         });
+
+        describe('can work without arguments and', () => {
+            const identity = () => null;
+            let identitySpy;
+            let memoizedIdentity;
+        
+            beforeEach(() => {
+                identitySpy = sinon.spy(identity);
+                memoizedIdentity = memoize(identitySpy);
+            });
+        
+            it('should cache the result of calling without arguments', () => {
+                memoizedIdentity();
+                memoizedIdentity();
+                memoizedIdentity();
+                sinon.assert.calledOnce(identitySpy);
+            });
+        });
     });
 });
