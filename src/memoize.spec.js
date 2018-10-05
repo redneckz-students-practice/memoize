@@ -10,7 +10,7 @@ describe('memoize', () => {
 
     it('should return undefined if no function provided', () => {
         [undefined, null, 123, {}].forEach((arg) => {
-            expect(memoize(arg)).to.be.an('null');
+            expect(memoize(arg)).to.be.an('undefined');
         });
     });
 
@@ -131,6 +131,36 @@ describe('memoize', () => {
             absSpy.reset();
             expect(memoizedAbs(3, 4)).to.equal(5); // #2
             sinon.assert.notCalled(absSpy);
+        });
+
+        describe('can work with objects and', () => {
+            const identity = obj => obj;
+            const jack = {name: 'Jack'};
+            const marry = {name: 'Marry'};
+            let identitySpy;
+            let memoizedIdentity;
+
+            beforeEach(() => {
+                identitySpy = sinon.spy(identity);
+                memoizedIdentity = memoize(identitySpy);
+            });
+
+            it('should be called with different objects', () => {
+                expect(memoizedIdentity(jack)).to.equal(jack);
+                sinon.assert.calledWith(identitySpy, jack);
+                sinon.assert.calledOnce(identitySpy);
+                expect(memoizedIdentity(marry)).to.equal(marry);
+                sinon.assert.calledWith(identitySpy, marry);
+                sinon.assert.calledTwice(identitySpy);
+            });
+
+            it('should cache the result of calling with different objects', () => {
+                expect(memoizedIdentity(jack)).to.equal(jack);
+                expect(memoizedIdentity(marry)).to.equal(marry);
+                expect(memoizedIdentity(jack)).to.equal(jack);
+                sinon.assert.calledWith(identitySpy, jack);
+                sinon.assert.calledTwice(identitySpy);
+            });
         });
     });
 });
